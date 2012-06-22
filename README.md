@@ -1,6 +1,7 @@
 Sorteo
 ======
 
-Standalone html + javascript that make a choice from participles in a txt
+Standalone HTML + javascript that that draws winners from a list of
+participants.
 
-ONLY WORKS ON FIREFOX
+ONLY WORKS ON FIREFOX or CHROME with flag --allow-file-access-from-files. If you put it in a server it will work in both browsers. 
