@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Sorteo</title>
+        <style>
+            body {
+                background: #ddd;
+            }
+            h3 {
+                margin: 66px 0px 30px 15px;
+            }
+            .wrapper {
+                margin: 20px 100px 100px 100px;
+                float: left;
+            }
+            #participantes {
+                width: 160px;
+                min-height: 160px;
+                border: dashed #aaa;
+                border-radius: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Sorteo</h1>
+        <ol>
+            <li>Arrastrar el fichero de participantes, tiene que tener un nombre por l&iacute;nea
+            <li>Elegir el n&uacute;mero de ganadores
+            <li>Pulsar el bot&oacute;n de Sortear
+        </ol>
+        <div class="wrapper">
+            <h2>Participantes</h2>
+            <div id="participantes">
+            </div>
+        </div>
+        <div class="wrapper">
+            <h2>Opciones</h2>
+            <div id="opciones">
+                N&uacute;mero de ganadores <input type="text" id="n_ganadores" value="1" size="2" maxsize="3"><br>
+                <input type="button" value="Sortear" id="sortear">
+            </div>
+        </div>
+        <div class="wrapper">
+            <h2>Ganadores</h2>
+            <div id="ganadores">
+            </div>
+        </div>
+        <script>
+            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+                (function() {
+                    var p = document.getElementById('participantes'),
+                        sortear = document.getElementById('sortear'),
+                        n_ganadores = document.getElementById('n_ganadores'),
+                        ganadores = document.getElementById('ganadores'),
+                        participantes = [];
+
+                    function getRand(max, min) {
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+
+                    p.addEventListener('dragover', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'copy';
+                    }, false);
+
+                    p.addEventListener('drop', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var reader = new FileReader();
+                        reader.onloadend = function(e) {
+                            participantes = e.target.result.split('\n').filter(function(e) { return e != ''});
+                            p.innerHTML = '<h3>' + participantes.length + ' participantes</h3>';
+                        };
+                        reader.readAsText(e.dataTransfer.files[0], 'utf-8');
+                    }, false);
+
+                    n_ganadores.addEventListener('blur', function(e) {
+                        (this.value <= 0 || isNaN(this.value)) && (this.value = 1);
+                    }, false);
+
+                    sortear.addEventListener('click', function(e) {
+                        var contenido = '',
+                            participantes_aux = [].concat(participantes);
+
+                        contenido += '<ol>';
+
+                        for (var i = 0, l = n_ganadores.value, pl = participantes.length - 1; i < l; i += 1) {
+                            var ganador = getRand(pl, 0);
+                            contenido += '<li>' + participantes_aux[ganador];
+                            delete participantes_aux[ganador];
+                            participantes_aux = participantes_aux.filter(function() { return this != undefined});
+                            pl -= 1;
+                        }
+
+                        contenido += '</ol>';
+
+                        ganadores.innerHTML = contenido;
+                    }, false);
+                })();
+            }
+            else {
+                var wrappers = document.querySelectorAll('.wrapper');
+                [].forEach.call(wrappers, function(e) {
+                    e.style.display = 'none';
+                });
+            }
+        </script>
+    </body>
+</html>
