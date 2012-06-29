@@ -46,7 +46,7 @@
             </div>
         </div>
         <script>
-            if (navigator.userAgent.indexOf('Firefox') !== -1) {
+            if (navigator.userAgent.indexOf('Firefox') !== -1 || (navigator.userAgent.indexOf('Chorme') !== -1 && document.location.href.indexOf('file://') === -1)) {
                 (function() {
                     var p = document.getElementById('participantes'),
                         sortear = document.getElementById('sortear'),
